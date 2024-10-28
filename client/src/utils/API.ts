@@ -1,25 +1,34 @@
 import type { User } from '../models/User.js';
 import type { Book } from '../models/Book.js';
-
+import {me} from './queries.js';
 // route to get logged in user's info (needs the token)
 export const getMe = (token: string) => {
-  return fetch('/api/users/me', {
+   return fetch('/graphql', {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       authorization: `Bearer ${token}`,
     },
-  });
+    body: JSON.stringify({ me }),
+  }).then(response => response.json());
 };
 
-export const createUser = (userData: User) => {
-  return fetch('/api/users', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  });
-};
+// export const createUser = (userData: User) => {
+//   return fetch('/graphql', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     // body: JSON.stringify({
+//     //   query: mutation,
+//     //   variables: {
+//     //     username: userData.username,
+//     //     email: userData.email,
+//     //     password: userData.password,
+//     //   },
+//     }),
+//   }).then(response => response.json());
+// };
 
 export const loginUser = (userData: User) => {
   return fetch('/api/users/login', {
