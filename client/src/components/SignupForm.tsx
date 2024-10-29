@@ -34,8 +34,13 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
+  
       const response = await createUser({
-        variables: { ...userFormData },
+        variables: {
+          username: userFormData.username,
+          email: userFormData.email,
+          password: userFormData.password,
+        },
       });;
 
       if (!response) {

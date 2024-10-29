@@ -31,9 +31,8 @@ const server = new ApolloServer({
    app.use('/graphql', expressMiddleware(server as any,
     {
       context:async ({ req }) => {
-        const user = authenticateToken(req);
-        console.log('User in context:', user); // Add logging to debug
-        return { user };
+        const contextReq = authenticateToken(req);
+        return { user:contextReq.user };
       },
     }
   ));

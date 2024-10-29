@@ -3,15 +3,18 @@ import { gql } from "@apollo/client";
 export const getUsers = gql`
   query getUsers {
     users {
-      id
+      _id
       username
       email
       password
       savedBooks {
-        id
+        _id
+        bookId
         title
-        author
+        authors
         description
+        image
+        link
       }
     }
   }
@@ -20,15 +23,18 @@ export const getUsers = gql`
 export const getUser = gql`
   query getUser($id: ID!) {
     user(id: $id) {
-      id
+      _id
       username
       email
       password
       savedBooks {
-        id
+        _id
+        bookId
         title
-        author
+        authors
         description
+        image
+        link
       }
     }
   }
@@ -37,10 +43,12 @@ export const getUser = gql`
 export const getBooks = gql`
   query getBooks {
     books {
-      id
+      _id
       title
-      author
+      authors
       description
+      image
+      link
     }
   }
 `;
@@ -48,20 +56,31 @@ export const getBooks = gql`
 export const getBook = gql`
   query getBook($bookId: ID!) {
     book(id: $bookId) {
-      id
+      _id
       title
-      author
+      authors
       description
+      image
+      link
     }
   }
 `;
 
-export const me = gql`
+export const GETME = gql`
   query me {
     me {
-      id
+      _id
       username
       email
+      savedBooks {
+        _id
+        bookId
+        title
+        authors
+        description
+        image
+        link
+      }
     }
   }
 `;

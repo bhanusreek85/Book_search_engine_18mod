@@ -1,17 +1,17 @@
 import type { User } from '../models/User.js';
 import type { Book } from '../models/Book.js';
-import {me} from './queries.js';
+// import {me} from './queries.js';
 // route to get logged in user's info (needs the token)
-export const getMe = (token: string) => {
-   return fetch('/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ me }),
-  }).then(response => response.json());
-};
+// export const getMe = (token: string) => {
+//    return fetch('/graphql', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       authorization: `Bearer ${token}`,
+//     },
+//     body: JSON.stringify({ me }),
+//   }).then(response => response.json());
+// };
 
 // export const createUser = (userData: User) => {
 //   return fetch('/graphql', {

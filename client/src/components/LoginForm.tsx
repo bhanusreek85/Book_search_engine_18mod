@@ -31,16 +31,16 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
     }
 
     try {
-      const response = await loginUser({
+      const { data } = await loginUser({
         variables: { email: userFormData.email, password: userFormData.password },
       });
 
-      if (!response) {
+      if (!data) {
         throw new Error('something went wrong!');
       }
-      console.log(response.data);
-      const { token } = response.data.login.token;
-      Auth.login(token);
+       console.log(data);
+      // const { token } = data.login.token;
+      Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
