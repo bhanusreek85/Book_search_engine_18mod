@@ -10,7 +10,10 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import {  searchGoogleBooks } from '../utils/API';
+import { useMutation } from '@apollo/client';
+import { CREATEBOOK } from '../utils/mutations';
+import {GETME} from '../utils/queries'
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
@@ -24,6 +27,9 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  const [createBook] = useMutation(CREATEBOOK,{
+    refetchQueries: [{ query: GETME }],
+  });
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
@@ -63,21 +69,25 @@ const SearchBooks = () => {
   };
 
   // create function to handle saving a book to our database
-  const handleSaveBook = async (bookId: string) => {
-    // find the book in `searchedBooks` state by the matching id
-    const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
-
-    // get token
+  const handleSaveBook = async (bookToSave: Book) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
       return false;
     }
-
+   console.log(bookToSave);
     try {
-      const response = await saveBook(bookToSave, token);
+      const { data } = await createBook({
+        variables: {
+          title: bookToSave.title,
+          authors: bookToSave.authors.join(', '),
+          description: bookToSave.description,
+          image:bookToSave.image,
+          link:bookToSave.link
+        },
+      });
 
-      if (!response.ok) {
+      if (!data) {
         throw new Error('something went wrong!');
       }
 
@@ -122,7 +132,7 @@ const SearchBooks = () => {
             : 'Search for a book to begin'}
         </h2>
         <Row>
-          {searchedBooks.map((book) => {
+          {searchedBooks.map((book:Book) => {
             return (
               <Col md="4" key={book.bookId}>
                 <Card border='dark'>
@@ -135,10 +145,10 @@ const SearchBooks = () => {
                     <Card.Text>{book.description}</Card.Text>
                     {Auth.loggedIn() && (
                       <Button
-                        disabled={savedBookIds?.some((savedBookId: string) => savedBookId === book.bookId)}
+                        disabled={savedBookIds?.some((savedId: string) => savedId === book.bookId)}
                         className='btn-block btn-info'
-                        onClick={() => handleSaveBook(book.bookId)}>
-                        {savedBookIds?.some((savedBookId: string) => savedBookId === book.bookId)
+                        onClick={() => handleSaveBook(book)}>
+                        {savedBookIds?.some((savedId: string) => savedId === book.bookId)
                           ? 'This book has already been saved!'
                           : 'Save this Book!'}
                       </Button>

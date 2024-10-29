@@ -28,15 +28,14 @@ export const authenticateToken = ( req : Request) => {
 
   // Try to verify the token
   try {
-    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || 'Mykanna', { maxAge: '2hr' });
-    // If the token is valid, attach the user data to the request object
-    req.user = data;
+    console.log('authenticateToken')
+    const  data : any = jwt.verify(token, process.env.JWT_SECRET_KEY || 'Mykanna', { maxAge: '2hr' });
+     req.user = data;
   } catch (err) {
     // If the token is invalid, log an error message
     console.log('Invalid token');
   }
-
-  // Return the request object
+     // Return the request object
   return req;
 };
 
