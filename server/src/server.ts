@@ -1,5 +1,5 @@
 import express from "express";
-// import {Request, Response,NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import db from "./config/connection.js";
@@ -32,7 +32,10 @@ const server = new ApolloServer({
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/build")));
   }
-
+  // Catch-all handler to serve the React app for any route not handled by the API
+  app.get("*", (_, res) => {
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+  });
   app.use(
     "/graphql",
     expressMiddleware(server as any, {
