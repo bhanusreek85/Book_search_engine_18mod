@@ -1,6 +1,7 @@
 import express from "express";
 // import {Request, Response,NextFunction} from "express";
 import path from "node:path";
+import { fileURLToPath } from "url";
 import db from "./config/connection.js";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -9,6 +10,10 @@ import { authenticateToken } from "./services/auth.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = new ApolloServer({
   typeDefs,
