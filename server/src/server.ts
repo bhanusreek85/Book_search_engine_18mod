@@ -1,5 +1,5 @@
 import express from "express";
-import { Request, Response, NextFunction } from "express";
+// import { Request, Response, NextFunction } from "express";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import db from "./config/connection.js";
