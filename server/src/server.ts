@@ -30,11 +30,11 @@ const server = new ApolloServer({
 
   // if we're in production, serve client/build as static assets
   if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../../client/build")));
+    app.use(express.static(path.join(__dirname, "../../client/dist")));
   }
   // Catch-all handler to serve the React app for any route not handled by the API
   app.get("*", (_, res) => {
-    res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
+    res.sendFile(path.join(__dirname, "../../client/dist", "index.html"));
   });
   app.use(
     "/graphql",
