@@ -1,11 +1,11 @@
 import express from "express";
 // import {Request, Response,NextFunction} from "express";
-// import path from "node:path";
+import path from "node:path";
 import db from "./config/connection.js";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs, resolvers } from "./schemas/index.js";
-import { authenticateToken } from './services/auth.js'; 
+import { authenticateToken } from "./services/auth.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,23 +24,22 @@ const server = new ApolloServer({
   app.use(express.json());
 
   // if we're in production, serve client/build as static assets
-  // if (process.env.NODE_ENV === "production") {
-  //   app.use(express.static(path.join(__dirname, "../client/build")));
-  // }
+  if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../client/build")));
+  }
 
-   app.use('/graphql', expressMiddleware(server as any,
-    {
-      context:async ({ req }) => {
+  app.use(
+    "/graphql",
+    expressMiddleware(server as any, {
+      context: async ({ req }) => {
         const contextReq = authenticateToken(req);
-        return { user:contextReq.user };
+        return { user: contextReq.user };
       },
-    }
-  ));
-
+    })
+  );
 
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
     console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
   });
 })();
- 
